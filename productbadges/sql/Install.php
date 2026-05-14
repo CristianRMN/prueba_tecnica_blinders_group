@@ -25,4 +25,25 @@ class Install
 
         return $column_one && $column_two;
     }
+
+    public function installTab(Module $module)
+    {
+        $tab = new Tab();
+
+        $tab->active = 1;
+        $tab->class_name = 'AdminProductBadges';
+        $tab->name = [];
+
+        foreach (Language::getLanguages(true) as $lang) {
+            $tab->name[$lang['id_lang']] = 'Product Badge';
+        }
+
+        $tab->id_parent = (int) Tab::getIdFromClassName('AdminCatalog');
+
+        $tab->module = $module->name;
+
+        return $tab->add();
+    }
+
+
 }

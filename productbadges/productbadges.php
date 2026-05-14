@@ -40,13 +40,15 @@ class productbadges extends Module
     public function install()
     {
         $install = new Install();
-        return parent::install() && $install->install();
+        return parent::install() && $install->install()
+        && $install->installTab($this);
     }
 
     public function uninstall()
     {
         $uninstall = new Uninstall();
-        return parent::uninstall() && $uninstall->uninstall();
+        return parent::uninstall() && $uninstall->uninstall()
+        && $uninstall->uninstallTab();
     }
 
 

@@ -8,7 +8,19 @@ class Uninstall
                 DROP TABLE IF EXISTS " . _DB_PREFIX_ . "product_badge");
         $column_two = Db::getInstance()->execute("
                 DROP TABLE IF EXISTS " . _DB_PREFIX_ . "badge ");
-        
+
         return $column_one && $column_two;
+    }
+
+    public function uninstallTab()
+    {
+        $idTab = (int) Tab::getIdFromClassName('AdminProductBadges');
+
+        if ($idTab) {
+            $tab = new Tab($idTab);
+            return $tab->delete();
+        }
+
+        return true;
     }
 }
