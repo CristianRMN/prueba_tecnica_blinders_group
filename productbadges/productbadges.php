@@ -4,6 +4,9 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+require_once __DIR__  . '/sql/Install.php';
+require_once __DIR__  . '/sql/Uninstall.php';
+
 
 class productbadges extends Module
 {
@@ -36,13 +39,14 @@ class productbadges extends Module
 
     public function install()
     {
-    
-        return parent::install();
+        $install = new Install();
+        return parent::install() && $install->install();
     }
 
     public function uninstall()
     {
-        return parent::uninstall();
+        $uninstall = new Uninstall();
+        return parent::uninstall() && $uninstall->uninstall();
     }
 
 
