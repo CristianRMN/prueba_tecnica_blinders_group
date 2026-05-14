@@ -1,0 +1,43 @@
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: container_mysql_blinders_group
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data_blinders_group:/var/lib/mysql
+    networks:
+      - prestashop_net
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
+  prestashop:
+    image: prestashop/prestashop:1.7.8.11-apache
+    container_name: container_prestashop_blinders_group
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    ports:
+      - "${APP_PORT}:80"
+    environment:
+      - DB_SERVER=mysql
+      - DB_NAME=${MYSQL_DATABASE}
+      - DB_USER=${MYSQL_USER}
+      - DB_PASSWD=${MYSQL_PASSWORD}
+      - PS_DOMAIN=localhost:${APP_PORT}
+    volumes:
+      - ./productbadges:/var/www/html/modules/productbadges
+      - penta_data_blinders_group:/var/www/html  
+    networks:
+      - prestashop_net
+
+networks:
+  prestashop_net:
+
+volumes:
+  db_data_blinders_group:
+  penta_data_blinders_group:
