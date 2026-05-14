@@ -49,13 +49,13 @@ class AdminProductBadgesController extends ModuleAdminController
                     'required' => true,
                 ],
                 [
-                    'type' => 'text',
+                    'type' => 'color',
                     'label' => 'Background color',
                     'name' => 'background_color',
                     'required' => true,
                 ],
                 [
-                    'type' => 'text',
+                    'type' => 'color',
                     'label' => 'Text color',
                     'name' => 'text_color',
                     'required' => true,
