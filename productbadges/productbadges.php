@@ -4,8 +4,8 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-require_once __DIR__  . '/sql/Install.php';
-require_once __DIR__  . '/sql/Uninstall.php';
+require_once __DIR__ . '/sql/Install.php';
+require_once __DIR__ . '/sql/Uninstall.php';
 require_once __DIR__ . '/classes/ProductBadges.php';
 
 class productbadges extends Module
@@ -41,22 +41,37 @@ class productbadges extends Module
     {
         $install = new Install();
         return parent::install() && $install->install()
-        && $install->installTab($this)
-        && $this->registerHook('displayAdminProductsMainStepRightColumnBottom')
-        && $this->registerHook('actionProductSave');;
+            && $install->installTab($this)
+            && $this->registerHook('displayAdminProductsMainStepRightColumnBottom')
+            && $this->registerHook('actionProductSave');
+        ;
     }
 
     public function uninstall()
     {
         $uninstall = new Uninstall();
         return parent::uninstall() && $uninstall->uninstall()
-        && $uninstall->uninstallTab()
-        && $this->unregisterHook('displayAdminProductsMainStepRightColumnBottom')
-        && $this->unregisterHook('actionProductSave');;
+            && $uninstall->uninstallTab()
+            && $this->unregisterHook('displayAdminProductsMainStepRightColumnBottom')
+            && $this->unregisterHook('actionProductSave');
+        ;
     }
 
     public function hookDisplayAdminProductsMainStepRightColumnBottom($params)
     {
+        $idProduct = (int)$params['id_product'];
+        if ($idProduct > 0) {
+
+            $sql = 'SELECT b.*
+                    FROM ' . _DB_PREFIX_ . 'badge b
+                    INNER JOIN ' . _DB_PREFIX_ . 'product_badge pb ON pb.id_badge = b.id_badge
+                    WHERE pb.id_product = ' . (int) $idProduct;
+            $badges = Db::getInstance()->executeS($sql);
+            $this->context->smarty->assign([
+                'badges' => $badges,
+            ]);
+            return $this->display(__FILE__, 'views/templates/admin/product_badges.tpl');
+        }
 
     }
 
