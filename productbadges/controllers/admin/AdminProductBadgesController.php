@@ -18,6 +18,12 @@ class AdminProductBadgesController extends ModuleAdminController
             'name' => [
                 'title' => 'Name',
             ],
+            'background_color' => [
+                'title' => 'Background color',
+            ],
+            'text_color' => [
+                'title' => 'Text color',
+            ],
             'position' => [
                 'title' => 'Position',
             ],
