@@ -28,4 +28,74 @@ class AdminProductBadgesController extends ModuleAdminController
             ],
         ];
     }
+
+    public function renderForm()
+    {
+        $this->fields_form = [
+            'legend' => [
+                'title' => 'Badge',
+            ],
+            'input' => [
+                [
+                    'type' => 'text',
+                    'label' => 'Name',
+                    'name' => 'name',
+                    'required' => true,
+                ],
+                [
+                    'type' => 'text',
+                    'label' => 'Background color',
+                    'name' => 'background_color',
+                    'required' => true,
+                ],
+                [
+                    'type' => 'text',
+                    'label' => 'Text color',
+                    'name' => 'text_color',
+                    'required' => true,
+                ],
+                [
+                    'type' => 'select',
+                    'label' => 'Position',
+                    'name' => 'position',
+                    'options' => [
+                        'query' => [
+                            [
+                                'id' => 'left',
+                                'name' => 'Left',
+                            ],
+                            [
+                                'id' => 'right',
+                                'name' => 'Right',
+                            ],
+                        ],
+                        'id' => 'id',
+                        'name' => 'name',
+                    ],
+                ],
+                [
+                    'type' => 'switch',
+                    'label' => 'Active',
+                    'name' => 'active',
+                    'values' => [
+                        [
+                            'id' => 'active_on',
+                            'value' => 1,
+                            'label' => 'Yes',
+                        ],
+                        [
+                            'id' => 'active_off',
+                            'value' => 0,
+                            'label' => 'No',
+                        ],
+                    ],
+                ],
+            ],
+            'submit' => [
+                'title' => 'Save',
+            ],
+        ];
+
+        return parent::renderForm();
+    }
 }
