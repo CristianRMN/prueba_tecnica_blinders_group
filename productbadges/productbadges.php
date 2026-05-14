@@ -41,14 +41,28 @@ class productbadges extends Module
     {
         $install = new Install();
         return parent::install() && $install->install()
-        && $install->installTab($this);
+        && $install->installTab($this)
+        && $this->registerHook('displayAdminProductsMainStepRightColumnBottom')
+        && $this->registerHook('actionProductSave');;
     }
 
     public function uninstall()
     {
         $uninstall = new Uninstall();
         return parent::uninstall() && $uninstall->uninstall()
-        && $uninstall->uninstallTab();
+        && $uninstall->uninstallTab()
+        && $this->unregisterHook('displayAdminProductsMainStepRightColumnBottom')
+        && $this->unregisterHook('actionProductSave');;
+    }
+
+    public function hookDisplayAdminProductsMainStepRightColumnBottom($params)
+    {
+
+    }
+
+    public function hookActionProductSave($params)
+    {
+
     }
 
 
