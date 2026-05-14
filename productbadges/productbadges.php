@@ -6,7 +6,7 @@ if (!defined('_PS_VERSION_')) {
 
 require_once __DIR__  . '/sql/Install.php';
 require_once __DIR__  . '/sql/Uninstall.php';
-
+require_once __DIR__ . '/classes/ProductBadges.php';
 
 class productbadges extends Module
 {
