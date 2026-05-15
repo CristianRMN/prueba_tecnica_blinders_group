@@ -59,19 +59,31 @@ class productbadges extends Module
 
     public function hookDisplayAdminProductsMainStepRightColumnBottom($params)
     {
-        $idProduct = (int)$params['id_product'];
-        if ($idProduct > 0) {
+        $idProduct = (int) $params['id_product'];
+        if ($idProduct <= 0) {
+            return '';
+        }
 
-            $sql = 'SELECT b.*
+        $sql = 'SELECT b.*
                     FROM ' . _DB_PREFIX_ . 'badge b
                     INNER JOIN ' . _DB_PREFIX_ . 'product_badge pb ON pb.id_badge = b.id_badge
                     WHERE pb.id_product = ' . (int) $idProduct;
-            $badges = Db::getInstance()->executeS($sql);
-            $this->context->smarty->assign([
-                'badges' => $badges,
-            ]);
-            return $this->display(__FILE__, 'views/templates/admin/product_badges.tpl');
-        }
+
+        $badges = Db::getInstance()->executeS($sql);
+        $all_badges = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'badge');
+        $adminUrl = $this->context->link->getAdminLink('AdminProductBadges');
+
+        $this->context->smarty->assign([
+            'badges' => $badges,
+            'all_badges' => $all_badges,
+            'id_product' => $idProduct,
+            'admin_product_badges_url' => $adminUrl,
+        ]);
+
+        $this->context->controller->addJS($this->getPathUri() . 'views/js/product_badges.js');
+
+        return $this->display(__FILE__, 'views/templates/admin/product_badges.tpl');
+
 
     }
 

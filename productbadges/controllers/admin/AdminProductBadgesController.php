@@ -35,6 +35,69 @@ class AdminProductBadgesController extends ModuleAdminController
         ];
     }
 
+    private function getProductBadges($idProduct)
+    {
+        $sql = 'SELECT b.*, pb.id_product
+                FROM ' . _DB_PREFIX_ . 'badge b
+                INNER JOIN ' . _DB_PREFIX_ . 'product_badge pb ON pb.id_badge = b.id_badge
+                WHERE pb.id_product = ' . (int) $idProduct;
+
+        return Db::getInstance()->executeS($sql);
+    }
+
+    public function ajaxProcessAddBadges()
+    {
+        $idProduct = (int) Tools::getValue('id_product');
+        $badges = Tools::getValue('badges');
+
+        if ($idProduct <= 0 || !is_array($badges)) {
+            die(json_encode(['success' => false]));
+        }
+
+        foreach ($badges as $idBadge) {
+            $idBadge = (int) $idBadge;
+            if ($idBadge <= 0) {
+                continue;
+            }
+
+            $exists = Db::getInstance()->getValue(
+                'SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'product_badge
+                 WHERE id_product = ' . $idProduct . ' AND id_badge = ' . $idBadge
+            );
+
+            if (!$exists) {
+                Db::getInstance()->insert('product_badge', [
+                    'id_product' => $idProduct,
+                    'id_badge' => $idBadge,
+                ]);
+            }
+        }
+
+        die(json_encode([
+            'success' => true,
+            'badges' => $this->getProductBadges($idProduct),
+        ]));
+    }
+
+    public function ajaxProcessRemoveBadge()
+    {
+        $idProduct = (int) Tools::getValue('id_product');
+        $idBadge = (int) Tools::getValue('id_badge');
+
+        if ($idProduct <= 0 || $idBadge <= 0) {
+            die(json_encode(['success' => false]));
+        }
+
+        Db::getInstance()->delete('product_badge',
+            'id_product = ' . $idProduct . ' AND id_badge = ' . $idBadge
+        );
+
+        die(json_encode([
+            'success' => true,
+            'badges' => $this->getProductBadges($idProduct),
+        ]));
+    }
+
     public function renderForm()
     {
         $this->fields_form = [
