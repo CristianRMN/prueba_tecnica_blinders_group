@@ -3,10 +3,9 @@ class Install
 {
     public function install()
     {
-        $column_one = Db::getInstance()->execute("
+        $tableBadge = Db::getInstance()->execute("
             CREATE TABLE IF NOT EXISTS " . _DB_PREFIX_ . "badge (
                 id_badge INT AUTO_INCREMENT,
-                name VARCHAR(50) NOT NULL,
                 background_color VARCHAR(10) NOT NULL,
                 text_color VARCHAR(10) NOT NULL,
                 position VARCHAR(20) NOT NULL,
@@ -15,7 +14,16 @@ class Install
             ) ENGINE=" . _MYSQL_ENGINE_ . " DEFAULT CHARSET=utf8;
         ");
 
-        $column_two = Db::getInstance()->execute("
+        $tableBadgeLang = Db::getInstance()->execute("
+            CREATE TABLE IF NOT EXISTS " . _DB_PREFIX_ . "badge_lang (
+                id_badge INT NOT NULL,
+                id_lang INT NOT NULL,
+                name VARCHAR(50) NOT NULL,
+                PRIMARY KEY (id_badge, id_lang)
+            ) ENGINE=" . _MYSQL_ENGINE_ . " DEFAULT CHARSET=utf8;
+        ");
+
+        $tableProductBadge = Db::getInstance()->execute("
             CREATE TABLE IF NOT EXISTS " . _DB_PREFIX_ . "product_badge (
                 id_product INT NOT NULL,
                 id_badge INT NOT NULL,
@@ -23,7 +31,7 @@ class Install
             ) ENGINE=" . _MYSQL_ENGINE_ . " DEFAULT CHARSET=utf8mb4;
         ");
 
-        return $column_one && $column_two;
+        return $tableBadge && $tableBadgeLang && $tableProductBadge;
     }
 
     public function installTab(Module $module)
