@@ -30,7 +30,7 @@ services:
       - DB_PASSWD=${MYSQL_PASSWORD}
       - PS_DOMAIN=localhost:${APP_PORT}
     volumes:
-      - ./productbadges:/var/www/html/modules/productbadges
+      - ./modules/productbadges:/var/www/html/modules/productbadges
       - penta_data_blinders_group:/var/www/html  
     networks:
       - prestashop_net
