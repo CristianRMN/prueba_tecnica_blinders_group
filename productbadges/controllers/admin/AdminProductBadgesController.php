@@ -7,7 +7,7 @@ class AdminProductBadgesController extends ModuleAdminController
         $this->table = 'badge';
         $this->className = 'Badge';
         $this->bootstrap = true;
-        $this->lang = false;
+        $this->lang = true;
 
         parent::__construct();
 
@@ -37,8 +37,11 @@ class AdminProductBadgesController extends ModuleAdminController
 
     private function getProductBadges($idProduct)
     {
-        $sql = 'SELECT b.*, pb.id_product
+        $idLang = (int) $this->context->language->id;
+
+        $sql = 'SELECT b.*, bl.name, pb.id_product
                 FROM ' . _DB_PREFIX_ . 'badge b
+                INNER JOIN ' . _DB_PREFIX_ . 'badge_lang bl ON bl.id_badge = b.id_badge AND bl.id_lang = ' . $idLang . '
                 INNER JOIN ' . _DB_PREFIX_ . 'product_badge pb ON pb.id_badge = b.id_badge
                 WHERE pb.id_product = ' . (int) $idProduct;
 

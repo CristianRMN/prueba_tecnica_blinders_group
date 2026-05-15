@@ -12,9 +12,11 @@ class Badge extends ObjectModel
     public static $definition = [
         'table' => 'badge',
         'primary' => 'id_badge',
+        'multilang' => true,
         'fields' => [
             'name' => [
                 'type' => self::TYPE_STRING,
+                'lang' => true,
                 'validate' => 'isGenericName',
                 'required' => true,
                 'size' => 50

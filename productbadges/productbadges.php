@@ -157,11 +157,13 @@ class productbadges extends Module
 
     private function getBadgesByProduct($idProduct)
     {
+        $idLang = (int) $this->context->language->id;
         $maxBadges = (int) Configuration::get('PRODUCTBADGES_MAX_BADGES');
         $limit = $maxBadges > 0 ? ' LIMIT ' . $maxBadges : '';
 
-        $sql = 'SELECT b.*
+        $sql = 'SELECT b.*, bl.name
                 FROM ' . _DB_PREFIX_ . 'badge b
+                INNER JOIN ' . _DB_PREFIX_ . 'badge_lang bl ON bl.id_badge = b.id_badge AND bl.id_lang = ' . $idLang . '
                 INNER JOIN ' . _DB_PREFIX_ . 'product_badge pb ON pb.id_badge = b.id_badge
                 WHERE pb.id_product = ' . (int) $idProduct . '
                 AND b.active = 1' . $limit;
@@ -231,13 +233,21 @@ class productbadges extends Module
             return '';
         }
 
-        $sql = 'SELECT b.*
+        $idLang = (int) $this->context->language->id;
+
+        $sql = 'SELECT b.*, bl.name
                 FROM ' . _DB_PREFIX_ . 'badge b
+                INNER JOIN ' . _DB_PREFIX_ . 'badge_lang bl ON bl.id_badge = b.id_badge AND bl.id_lang = ' . $idLang . '
                 INNER JOIN ' . _DB_PREFIX_ . 'product_badge pb ON pb.id_badge = b.id_badge
                 WHERE pb.id_product = ' . (int) $idProduct;
 
         $badges = Db::getInstance()->executeS($sql);
-        $all_badges = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'badge');
+
+        $all_badges = Db::getInstance()->executeS(
+            'SELECT b.*, bl.name
+             FROM ' . _DB_PREFIX_ . 'badge b
+             INNER JOIN ' . _DB_PREFIX_ . 'badge_lang bl ON bl.id_badge = b.id_badge AND bl.id_lang = ' . $idLang
+        );
         $adminUrl = $this->context->link->getAdminLink('AdminProductBadges');
 
         $this->context->smarty->assign([
