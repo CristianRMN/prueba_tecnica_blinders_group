@@ -214,7 +214,11 @@ class productbadges extends Module
             return '';
         }
 
+      
+
         $badges = $this->getBadgesByProduct($idProduct);
+
+  
         if (empty($badges)) {
             return '';
         }
