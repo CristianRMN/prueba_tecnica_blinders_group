@@ -43,7 +43,6 @@ class productbadges extends Module
         return parent::install() && $install->install()
             && $install->installTab($this)
             && $this->registerHook('displayAdminProductsMainStepRightColumnBottom')
-            && $this->registerHook('actionProductSave')
             && $this->registerHook('displayAfterProductThumbs')
             && $this->registerHook('displayProductListReviews')
             && $this->registerHook('actionFrontControllerSetMedia');
@@ -55,7 +54,6 @@ class productbadges extends Module
         return parent::uninstall() && $uninstall->uninstall()
             && $uninstall->uninstallTab()
             && $this->unregisterHook('displayAdminProductsMainStepRightColumnBottom')
-            && $this->unregisterHook('actionProductSave')
             && $this->unregisterHook('displayAfterProductThumbs')
             && $this->unregisterHook('displayProductListReviews')
             && $this->unregisterHook('actionFrontControllerSetMedia');
@@ -151,10 +149,7 @@ class productbadges extends Module
 
     }
 
-    public function hookActionProductSave($params)
-    {
-
-    }
+ 
 
 
 }

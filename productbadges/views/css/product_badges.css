@@ -25,12 +25,10 @@
     white-space: nowrap;
 }
 
-/* Ficha de producto: posicionar sobre la imagen */
 .images-container {
     position: relative;
 }
 
-/* Listados: posicionar sobre la miniatura */
 .thumbnail-container {
     position: relative;
 }
