@@ -45,7 +45,11 @@ class productbadges extends Module
             && $this->registerHook('displayAdminProductsMainStepRightColumnBottom')
             && $this->registerHook('displayAfterProductThumbs')
             && $this->registerHook('displayProductListReviews')
-            && $this->registerHook('actionFrontControllerSetMedia');
+            && $this->registerHook('actionFrontControllerSetMedia')
+            && Configuration::updateValue('PRODUCTBADGES_ENABLED', 1)
+            && Configuration::updateValue('PRODUCTBADGES_SHOW_LIST', 1)
+            && Configuration::updateValue('PRODUCTBADGES_SHOW_PRODUCT', 1)
+            && Configuration::updateValue('PRODUCTBADGES_MAX_BADGES', 3);
     }
 
     public function uninstall()
@@ -56,7 +60,11 @@ class productbadges extends Module
             && $this->unregisterHook('displayAdminProductsMainStepRightColumnBottom')
             && $this->unregisterHook('displayAfterProductThumbs')
             && $this->unregisterHook('displayProductListReviews')
-            && $this->unregisterHook('actionFrontControllerSetMedia');
+            && $this->unregisterHook('actionFrontControllerSetMedia')
+            && Configuration::deleteByName('PRODUCTBADGES_ENABLED')
+            && Configuration::deleteByName('PRODUCTBADGES_SHOW_LIST')
+            && Configuration::deleteByName('PRODUCTBADGES_SHOW_PRODUCT')
+            && Configuration::deleteByName('PRODUCTBADGES_MAX_BADGES');
     }
 
     private function getBadgesByProduct($idProduct)
