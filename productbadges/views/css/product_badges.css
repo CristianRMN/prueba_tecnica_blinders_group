@@ -1,0 +1,36 @@
+.product-badges-container {
+    position: absolute;
+    top: 10px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.product-badges-container.position-left {
+    left: 10px;
+}
+
+.product-badges-container.position-right {
+    right: 10px;
+}
+
+.product-badge-label {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 3px;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+/* Ficha de producto: posicionar sobre la imagen */
+.images-container {
+    position: relative;
+}
+
+/* Listados: posicionar sobre la miniatura */
+.thumbnail-container {
+    position: relative;
+}
