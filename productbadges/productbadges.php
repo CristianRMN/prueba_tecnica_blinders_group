@@ -67,6 +67,94 @@ class productbadges extends Module
             && Configuration::deleteByName('PRODUCTBADGES_MAX_BADGES');
     }
 
+    public function getContent()
+    {
+        $output = '';
+
+        if (Tools::isSubmit('submitProductBadgesConfig')) {
+            Configuration::updateValue('PRODUCTBADGES_ENABLED', (int) Tools::getValue('PRODUCTBADGES_ENABLED'));
+            Configuration::updateValue('PRODUCTBADGES_SHOW_LIST', (int) Tools::getValue('PRODUCTBADGES_SHOW_LIST'));
+            Configuration::updateValue('PRODUCTBADGES_SHOW_PRODUCT', (int) Tools::getValue('PRODUCTBADGES_SHOW_PRODUCT'));
+            Configuration::updateValue('PRODUCTBADGES_MAX_BADGES', (int) Tools::getValue('PRODUCTBADGES_MAX_BADGES'));
+
+            $output .= $this->displayConfirmation($this->trans('Settings updated.', [], 'Modules.Productbadges.Admin'));
+        }
+
+        return $output . $this->renderConfigForm();
+    }
+
+    private function renderConfigForm()
+    {
+        $helper = new HelperForm();
+        $helper->module = $this;
+        $helper->table = $this->table;
+        $helper->name_controller = $this->name;
+        $helper->token = Tools::getAdminTokenLite('AdminModules');
+        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
+        $helper->default_form_language = (int) Configuration::get('PS_LANG_DEFAULT');
+        $helper->submit_action = 'submitProductBadgesConfig';
+
+        $helper->fields_value = [
+            'PRODUCTBADGES_ENABLED' => Configuration::get('PRODUCTBADGES_ENABLED'),
+            'PRODUCTBADGES_SHOW_LIST' => Configuration::get('PRODUCTBADGES_SHOW_LIST'),
+            'PRODUCTBADGES_SHOW_PRODUCT' => Configuration::get('PRODUCTBADGES_SHOW_PRODUCT'),
+            'PRODUCTBADGES_MAX_BADGES' => Configuration::get('PRODUCTBADGES_MAX_BADGES'),
+        ];
+
+        $form = [
+            'form' => [
+                'legend' => [
+                    'title' => $this->trans('Settings', [], 'Modules.Productbadges.Admin'),
+                    'icon' => 'icon-cogs',
+                ],
+                'input' => [
+                    [
+                        'type' => 'switch',
+                        'label' => $this->trans('Enable badges globally', [], 'Modules.Productbadges.Admin'),
+                        'name' => 'PRODUCTBADGES_ENABLED',
+                        'is_bool' => true,
+                        'values' => [
+                            ['id' => 'enabled_on', 'value' => 1, 'label' => $this->trans('Yes', [], 'Admin.Global')],
+                            ['id' => 'enabled_off', 'value' => 0, 'label' => $this->trans('No', [], 'Admin.Global')],
+                        ],
+                    ],
+                    [
+                        'type' => 'switch',
+                        'label' => $this->trans('Show in product listings', [], 'Modules.Productbadges.Admin'),
+                        'name' => 'PRODUCTBADGES_SHOW_LIST',
+                        'is_bool' => true,
+                        'values' => [
+                            ['id' => 'list_on', 'value' => 1, 'label' => $this->trans('Yes', [], 'Admin.Global')],
+                            ['id' => 'list_off', 'value' => 0, 'label' => $this->trans('No', [], 'Admin.Global')],
+                        ],
+                    ],
+                    [
+                        'type' => 'switch',
+                        'label' => $this->trans('Show in product detail page', [], 'Modules.Productbadges.Admin'),
+                        'name' => 'PRODUCTBADGES_SHOW_PRODUCT',
+                        'is_bool' => true,
+                        'values' => [
+                            ['id' => 'product_on', 'value' => 1, 'label' => $this->trans('Yes', [], 'Admin.Global')],
+                            ['id' => 'product_off', 'value' => 0, 'label' => $this->trans('No', [], 'Admin.Global')],
+                        ],
+                    ],
+                    [
+                        'type' => 'text',
+                        'label' => $this->trans('Maximum badges per product', [], 'Modules.Productbadges.Admin'),
+                        'name' => 'PRODUCTBADGES_MAX_BADGES',
+                        'class' => 'fixed-width-sm',
+                        'validation' => 'isUnsignedInt',
+                    ],
+                ],
+                'submit' => [
+                    'title' => $this->trans('Save', [], 'Admin.Actions'),
+                ],
+            ],
+        ];
+
+        return $helper->generateForm([$form]);
+    }
+
     private function getBadgesByProduct($idProduct)
     {
         $sql = 'SELECT b.*
