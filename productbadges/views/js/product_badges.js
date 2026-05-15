@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     var controllerUrl = adminProductBadgesUrl;
 
     function renderBadges(badges) {
@@ -23,7 +22,6 @@ $(document).ready(function () {
         container.html(html);
     }
 
-    // Añadir badges
     $(document).on('click', '#add-badges', function () {
         var idProduct = $(this).data('id-product');
         var selectedBadges = $('#badge-selector').val();
@@ -51,7 +49,6 @@ $(document).ready(function () {
         });
     });
 
-    // Eliminar badge
     $(document).on('click', '.remove-badge', function () {
         var idProduct = $(this).data('id-product');
         var idBadge = $(this).data('id-badge');

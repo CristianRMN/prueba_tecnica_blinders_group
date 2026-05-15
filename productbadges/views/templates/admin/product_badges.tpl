@@ -1,6 +1,7 @@
 <script>
     var adminProductBadgesUrl = '{$admin_product_badges_url|escape:'javascript' nofilter}';
 </script>
+<script src="{$product_badges_js_url|escape:'htmlall':'UTF-8'}"></script>
 <div class="panel">
     <h3>Badges del producto</h3>
 

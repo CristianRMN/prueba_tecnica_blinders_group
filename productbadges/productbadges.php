@@ -80,7 +80,9 @@ class productbadges extends Module
             'admin_product_badges_url' => $adminUrl,
         ]);
 
-        $this->context->controller->addJS($this->getPathUri() . 'views/js/product_badges.js');
+        $this->context->smarty->assign([
+            'product_badges_js_url' => $this->getPathUri() . 'views/js/product_badges.js',
+        ]);
 
         return $this->display(__FILE__, 'views/templates/admin/product_badges.tpl');
 
