@@ -157,11 +157,14 @@ class productbadges extends Module
 
     private function getBadgesByProduct($idProduct)
     {
+        $maxBadges = (int) Configuration::get('PRODUCTBADGES_MAX_BADGES');
+        $limit = $maxBadges > 0 ? ' LIMIT ' . $maxBadges : '';
+
         $sql = 'SELECT b.*
                 FROM ' . _DB_PREFIX_ . 'badge b
                 INNER JOIN ' . _DB_PREFIX_ . 'product_badge pb ON pb.id_badge = b.id_badge
                 WHERE pb.id_product = ' . (int) $idProduct . '
-                AND b.active = 1';
+                AND b.active = 1' . $limit;
 
         return Db::getInstance()->executeS($sql);
     }
@@ -177,6 +180,10 @@ class productbadges extends Module
 
     public function hookDisplayAfterProductThumbs($params)
     {
+        if (!Configuration::get('PRODUCTBADGES_ENABLED') || !Configuration::get('PRODUCTBADGES_SHOW_PRODUCT')) {
+            return '';
+        }
+
         $idProduct = (int) $params['product']['id_product'];
         if ($idProduct <= 0) {
             return '';
@@ -196,6 +203,10 @@ class productbadges extends Module
 
     public function hookDisplayProductListReviews($params)
     {
+        if (!Configuration::get('PRODUCTBADGES_ENABLED') || !Configuration::get('PRODUCTBADGES_SHOW_LIST')) {
+            return '';
+        }
+
         $idProduct = (int) $params['product']['id_product'];
         if ($idProduct <= 0) {
             return '';
