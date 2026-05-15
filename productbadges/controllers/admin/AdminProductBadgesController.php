@@ -112,6 +112,7 @@ class AdminProductBadgesController extends ModuleAdminController
                     'type' => 'text',
                     'label' => 'Name',
                     'name' => 'name',
+                    'lang' => true,
                     'required' => true,
                 ],
                 [
