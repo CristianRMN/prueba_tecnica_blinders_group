@@ -43,8 +43,10 @@ class productbadges extends Module
         return parent::install() && $install->install()
             && $install->installTab($this)
             && $this->registerHook('displayAdminProductsMainStepRightColumnBottom')
-            && $this->registerHook('actionProductSave');
-        ;
+            && $this->registerHook('actionProductSave')
+            && $this->registerHook('displayAfterProductThumbs')
+            && $this->registerHook('displayProductListReviews')
+            && $this->registerHook('actionFrontControllerSetMedia');
     }
 
     public function uninstall()
@@ -53,8 +55,68 @@ class productbadges extends Module
         return parent::uninstall() && $uninstall->uninstall()
             && $uninstall->uninstallTab()
             && $this->unregisterHook('displayAdminProductsMainStepRightColumnBottom')
-            && $this->unregisterHook('actionProductSave');
-        ;
+            && $this->unregisterHook('actionProductSave')
+            && $this->unregisterHook('displayAfterProductThumbs')
+            && $this->unregisterHook('displayProductListReviews')
+            && $this->unregisterHook('actionFrontControllerSetMedia');
+    }
+
+    private function getBadgesByProduct($idProduct)
+    {
+        $sql = 'SELECT b.*
+                FROM ' . _DB_PREFIX_ . 'badge b
+                INNER JOIN ' . _DB_PREFIX_ . 'product_badge pb ON pb.id_badge = b.id_badge
+                WHERE pb.id_product = ' . (int) $idProduct . '
+                AND b.active = 1';
+
+        return Db::getInstance()->executeS($sql);
+    }
+
+    public function hookActionFrontControllerSetMedia()
+    {
+        $this->context->controller->registerStylesheet(
+            'module-productbadges',
+            'modules/' . $this->name . '/views/css/product_badges.css',
+            ['media' => 'all', 'priority' => 150]
+        );
+    }
+
+    public function hookDisplayAfterProductThumbs($params)
+    {
+        $idProduct = (int) $params['product']['id_product'];
+        if ($idProduct <= 0) {
+            return '';
+        }
+
+        $badges = $this->getBadgesByProduct($idProduct);
+        if (empty($badges)) {
+            return '';
+        }
+
+        $this->context->smarty->assign([
+            'product_badges' => $badges,
+        ]);
+
+        return $this->display(__FILE__, 'views/templates/hook/product_badges_detail.tpl');
+    }
+
+    public function hookDisplayProductListReviews($params)
+    {
+        $idProduct = (int) $params['product']['id_product'];
+        if ($idProduct <= 0) {
+            return '';
+        }
+
+        $badges = $this->getBadgesByProduct($idProduct);
+        if (empty($badges)) {
+            return '';
+        }
+
+        $this->context->smarty->assign([
+            'product_badges' => $badges,
+        ]);
+
+        return $this->display(__FILE__, 'views/templates/hook/product_badges_list.tpl');
     }
 
     public function hookDisplayAdminProductsMainStepRightColumnBottom($params)
@@ -65,9 +127,9 @@ class productbadges extends Module
         }
 
         $sql = 'SELECT b.*
-                    FROM ' . _DB_PREFIX_ . 'badge b
-                    INNER JOIN ' . _DB_PREFIX_ . 'product_badge pb ON pb.id_badge = b.id_badge
-                    WHERE pb.id_product = ' . (int) $idProduct;
+                FROM ' . _DB_PREFIX_ . 'badge b
+                INNER JOIN ' . _DB_PREFIX_ . 'product_badge pb ON pb.id_badge = b.id_badge
+                WHERE pb.id_product = ' . (int) $idProduct;
 
         $badges = Db::getInstance()->executeS($sql);
         $all_badges = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'badge');
